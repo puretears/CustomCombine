@@ -31,3 +31,9 @@ public extension Sequence {
     return values + [Subscribers.Event<Element, Failure>.complete(completion)]
   }
 }
+
+public extension Publisher {
+  func sink(event: @escaping (Subscribers.Event<Output, Failure>) -> Void) -> AnyCancellable {
+    return sink(receiveCompletion: { event(.complete($0)) }, receiveValue: { event(.value($0)) })
+  }
+}

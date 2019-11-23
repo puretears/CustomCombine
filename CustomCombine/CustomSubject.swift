@@ -30,12 +30,13 @@ public class CustomSubject<Output, Failure: Error>: Subject {
     }
     
     func cancel() {
-      subject.subscribers.removeValue(forKey: combineIdentifier)
+      subject.$subscribers.mutate { $0.removeValue(forKey: self.combineIdentifier) }
     }
   }
-
-  var subscribers: Dictionary<
-    CombineIdentifier, CustomSubscription<Behavior>> = [:]
+  
+  typealias SubscriberRecords = Dictionary<CombineIdentifier, CustomSubscription<Behavior>>
+//  var subscribers = AtomicBox<SubscriberRecords>([:])
+  @Atomic<SubscriberRecords>(content: [:]) var subscribers
 
   // Subject
   public func send(subscription: Subscription) {
@@ -53,7 +54,7 @@ public class CustomSubject<Output, Failure: Error>: Subject {
       _ = sub.receive(completion: completion)
     }
 
-    subscribers.removeAll()
+    $subscribers.mutate { $0.removeAll() }
   }
 
   // Publisher
@@ -61,7 +62,7 @@ public class CustomSubject<Output, Failure: Error>: Subject {
     let behavior = Behavior(subject: self, downstream: AnySubscriber(subscriber))
     let subscription = CustomSubscription(behavior: behavior)
 
-    subscribers[subscription.combineIdentifier] = subscription
+    $subscribers.mutate { $0[subscription.combineIdentifier] = subscription }
     subscription.receive(subscription: Subscriptions.empty)
   }
 }
