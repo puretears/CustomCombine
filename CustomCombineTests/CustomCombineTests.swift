@@ -221,7 +221,7 @@ class CustomCombineTests: XCTestCase {
     let sinkD = multicastB.sink(event: { receivedD.append($0) })
     subjectA.send(sequence: 3...4, completion: .finished)
     
-    XCTAssertEqual(receivedC, [11, 13, 16, 20].asEvents(completion: .finished))
+    XCTAssertEqual(receivedC, [0, 11, 13, 16, 20].asEvents(completion: .finished))
     XCTAssertEqual(receivedD, [13, 16, 20].asEvents(completion: .finished))
     
     sinkC.cancel()
@@ -423,5 +423,24 @@ class CustomCombineTests: XCTestCase {
     subject2.send(2)
     
     XCTAssertEqual(received, [1].asEvents(completion: .finished))
+  }
+  
+  func testDemand() {
+    var received = [Subscribers.Event<Int, Never>]()
+    let subject = PassthroughSubject<Int, Never>()
+    let sink = CustomDemandSink<Int, Never>(
+      demand: 2,
+      receiveValue: { received.append(.value($0)) },
+      receiveCompletion: { received.append(.complete($0)) }
+    )
+    
+    subject.subscribe(sink)
+    
+    subject.send(sequence: 1...3, completion: nil)
+    sink.increaseDemand(2)
+    subject.send(sequence: 4...6, completion: .finished)
+    sink.increaseDemand(2)
+    
+    XCTAssertEqual(received, [1, 2, 4, 5].asEvents(completion: .finished))
   }
 }
