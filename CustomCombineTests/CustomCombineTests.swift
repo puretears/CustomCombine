@@ -443,4 +443,106 @@ class CustomCombineTests: XCTestCase {
     
     XCTAssertEqual(received, [1, 2, 4, 5].asEvents(completion: .finished))
   }
+  
+  func testReceiveOnImmediate() {
+    let e = expectation(description: "")
+    let subject = PassthroughSubject<Int, Never>()
+    var received = [Subscribers.Event<Int, Never>]()
+    print(Thread.current)
+    let sink = subject.receive(on: ImmediateScheduler.shared)
+      .sink(receiveCompletion: {
+        print(Thread.current)
+        received.append(.complete($0))
+        e.fulfill()
+      }, receiveValue: {
+        received.append(.value($0))
+      })
+    
+    subject.send(1)
+    subject.send(completion: .finished)
+    
+    wait(for: [e], timeout: 5.0)
+    
+    XCTAssertEqual(received, [1].asEvents(completion: .finished))
+    
+    sink.cancel()
+  }
+  
+  func testReceiveOnFailure() {
+    let queue = DispatchQueue(label: "test")
+    let e = expectation(description: "")
+    let subject = PassthroughSubject<Int, Never>()
+    var received = [Subscribers.Event<Int, Never>]()
+    print(Thread.current)
+    let sink = subject.receive(on: queue)
+      .sink(receiveCompletion: {
+        print(Thread.current)
+        received.append(.complete($0))
+        e.fulfill()
+      }, receiveValue: {
+        received.append(.value($0))
+      })
+    
+    subject.send(1)
+    queue.async { subject.send(completion: .finished) }
+    
+    wait(for: [e], timeout: 5.0)
+    
+    XCTAssertEqual(received, [].asEvents(completion: .finished))
+    
+    sink.cancel()
+  }
+  
+  func testReceiveWithDebug() {
+    let subject = PassthroughSubject<Int, Never>()
+    var received = [Subscribers.Event<Int, Never>]()
+    
+    print("Start...")
+    let cancellable = subject
+      .debug()
+      .receive(on: DispatchQueue.main)
+      .sink(receiveValue: { received.append(.value($0)) })
+    
+    print("Phase 1...")
+    subject.send(1)
+    XCTAssertEqual(received, [].asEvents(completion: nil))
+    
+    print("Phase 2...")
+    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.001))
+    XCTAssertEqual(received, [].asEvents(completion: nil))
+    
+    print("Phase 3...")
+    subject.send(2)
+    XCTAssertEqual(received, [].asEvents(completion: nil))
+    
+    print("Phase 4...")
+    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.001))
+    XCTAssertEqual(received, [2].asEvents(completion: nil))
+    
+    cancellable.cancel()
+  }
+  
+  func testBufferedReceiveOn() {
+    let subject = PassthroughSubject<Int, Never>()
+    let e = expectation(description: "")
+    var received = [Subscribers.Event<Int, Never>]()
+    
+    let cancellable = subject
+      .buffer(size: Int.max, prefetch: .byRequest, whenFull: .dropNewest)
+      .receive(on: DispatchQueue(label: "test"))
+      .sink(receiveCompletion: {
+        received.append(.complete($0))
+        e.fulfill()
+      }, receiveValue: {
+        received.append(.value($0))
+      })
+    
+    subject.send(1)
+    subject.send(completion: .finished)
+    
+    wait(for: [e], timeout: 5.0)
+    XCTAssertEqual(received, [1].asEvents(completion: .finished))
+    
+    cancellable.cancel()
+  }
 }

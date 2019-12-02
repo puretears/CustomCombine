@@ -10,6 +10,7 @@
 		6831D441237FD73000CDFF99 /* AtomicBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6831D440237FD73000CDFF99 /* AtomicBox.swift */; };
 		6831D443238292E100CDFF99 /* BufferSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6831D442238292E100CDFF99 /* BufferSubject.swift */; };
 		68975DBF238D35FC003AC1C9 /* CustomDemandSink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68975DBE238D35FC003AC1C9 /* CustomDemandSink.swift */; };
+		68975DC123949FD5003AC1C9 /* Publisher+debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68975DC023949FD5003AC1C9 /* Publisher+debug.swift */; };
 		68A9E49D2370648300B9D481 /* CustomCombine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68A9E4932370648300B9D481 /* CustomCombine.framework */; };
 		68A9E4A22370648300B9D481 /* CustomCombineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A9E4A12370648300B9D481 /* CustomCombineTests.swift */; };
 		68A9E4A42370648300B9D481 /* CustomCombine.h in Headers */ = {isa = PBXBuildFile; fileRef = 68A9E4962370648300B9D481 /* CustomCombine.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -35,6 +36,7 @@
 		6831D440237FD73000CDFF99 /* AtomicBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicBox.swift; sourceTree = "<group>"; };
 		6831D442238292E100CDFF99 /* BufferSubject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferSubject.swift; sourceTree = "<group>"; };
 		68975DBE238D35FC003AC1C9 /* CustomDemandSink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDemandSink.swift; sourceTree = "<group>"; };
+		68975DC023949FD5003AC1C9 /* Publisher+debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+debug.swift"; sourceTree = "<group>"; };
 		68A9E4932370648300B9D481 /* CustomCombine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CustomCombine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		68A9E4962370648300B9D481 /* CustomCombine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomCombine.h; sourceTree = "<group>"; };
 		68A9E4972370648300B9D481 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				68A9E4B123740D6600B9D481 /* CustomSubscription.swift */,
 				68AC0F492386E4B100DD0FED /* MergeSink.swift */,
 				68975DBE238D35FC003AC1C9 /* CustomDemandSink.swift */,
+				68975DC023949FD5003AC1C9 /* Publisher+debug.swift */,
 			);
 			path = CustomCombine;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 				68A9E4B62375BCF900B9D481 /* CustomScan.swift in Sources */,
 				68A9E4B02371044500B9D481 /* Subject+Send.swift in Sources */,
 				68A9E4B423759EB000B9D481 /* CustomSubject.swift in Sources */,
+				68975DC123949FD5003AC1C9 /* Publisher+debug.swift in Sources */,
 				6831D443238292E100CDFF99 /* BufferSubject.swift in Sources */,
 				68A9E4AE2370679800B9D481 /* Subscribers+Event.swift in Sources */,
 				68975DBF238D35FC003AC1C9 /* CustomDemandSink.swift in Sources */,
